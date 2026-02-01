@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 助力公務效率提升</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: #0f0f1a;
+      color: #fff;
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      min-height: 100vh;
+      padding: 60px 80px;
+      animation: fadeIn 0.5s ease;
+    }
+    .slide.active { display: flex; flex-direction: column; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    /* Title Slide */
+    .title-slide {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .title-slide h1 { font-size: 4rem; font-weight: 900; margin-bottom: 20px; }
+    .title-slide .subtitle { font-size: 1.8rem; opacity: 0.9; margin-bottom: 40px; }
+    .title-slide .meta { font-size: 1.2rem; opacity: 0.8; }
+    
+    /* Section Slide */
+    .section-slide {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .section-slide.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .section-slide.orange { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .section-slide.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .section-slide .section-num { font-size: 6rem; font-weight: 900; opacity: 0.3; }
+    .section-slide h2 { font-size: 3.5rem; font-weight: 700; }
+    .section-slide .section-time { font-size: 1.5rem; margin-top: 20px; opacity: 0.8; }
+    
+    /* Content Slide */
+    .content-slide {
+      background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    }
+    .content-slide h2 { 
+      font-size: 2.5rem; 
+      margin-bottom: 40px; 
+      color: #667eea;
+      border-left: 5px solid #667eea;
+      padding-left: 20px;
+    }
+    .content-slide h3 { font-size: 1.8rem; color: #38ef7d; margin: 30px 0 15px; }
+    .content-slide p { font-size: 1.4rem; line-height: 1.8; margin-bottom: 15px; color: #a0aec0; }
+    .content-slide ul { font-size: 1.4rem; line-height: 2; margin-left: 30px; }
+    .content-slide li { margin-bottom: 10px; }
+    .content-slide li::marker { color: #667eea; }
+    
+    /* Tool Card */
+    .tool-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-top: 30px; }
+    .tool-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 25px;
+    }
+    .tool-card h4 { font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
+    .tool-card p { font-size: 1.1rem; color: #a0aec0; margin: 0; }
+    .tool-card .tag { 
+      display: inline-block; 
+      background: #667eea; 
+      padding: 4px 12px; 
+      border-radius: 20px; 
+      font-size: 0.9rem; 
+      margin-top: 10px; 
+    }
+    .tool-card .tag.green { background: #38a169; }
+    .tool-card .tag.orange { background: #dd6b20; }
+    
+    /* Code Block */
+    .code-block {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #c9d1d9;
+      white-space: pre-wrap;
+    }
+    
+    /* Table */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 1.2rem;
+    }
+    .styled-table th {
+      background: #667eea;
+      padding: 15px 20px;
+      text-align: left;
+    }
+    .styled-table td {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .styled-table tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+    
+    /* Navigation */
+    .nav {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+    .nav button {
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .nav button:hover { background: #667eea; transform: scale(1.1); }
+    
+    .page-num {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      font-size: 1rem;
+      opacity: 0.5;
+    }
+    
+    /* Highlight */
+    .highlight { color: #f6e05e; font-weight: 700; }
+    .highlight-green { color: #68d391; font-weight: 700; }
+    .highlight-pink { color: #f687b3; font-weight: 700; }
+    
+    /* Two Column */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    
+    /* Icon List */
+    .icon-list { list-style: none; margin-left: 0; }
+    .icon-list li { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+    .icon-list .icon { font-size: 2rem; }
+    
+    /* Warning Box */
+    .warning-box {
+      background: rgba(245, 101, 101, 0.1);
+      border: 1px solid #f56565;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .warning-box h4 { color: #f56565; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <!-- Slide 1: Title -->
+  <div class="slide title-slide active">
+    <h1>🤖 AI 助力公務效率提升</h1>
+    <p class="subtitle">善用人工智慧工具，提升工作效能</p>
+    <p class="meta">文化部公務員培訓課程 ｜ 2 小時</p>
+  </div>
+
+  <!-- Slide 2: Agenda -->
+  <div class="slide content-slide">
+    <h2>📋 課程大綱</h2>
+    <table class="styled-table">
+      <tr><th>段落</th><th>主題</th><th>時間</th></tr>
+      <tr><td>一</td><td>Gemini：計劃構思與資料收集</td><td>35 分鐘</td></tr>
+      <tr><td>二</td><td>AI 生成圖片與表格</td><td>30 分鐘</td></tr>
+      <tr><td>三</td><td>AI 生成影片與字幕工具</td><td>30 分鐘</td></tr>
+      <tr><td>四</td><td>AI 整理會議記錄</td><td>20 分鐘</td></tr>
+      <tr><td></td><td>Q&A + 總結</td><td>5 分鐘</td></tr>
+    </table>
+  </div>
+
+  <!-- Slide 3: Section 1 -->
+  <div class="slide section-slide purple">
+    <div class="section-num">01</div>
+    <h2>Google Gemini</h2>
+    <p class="section-time">計劃構思與資料收集 ｜ 35 分鐘</p>
+  </div>
+
+  <!-- Slide 4: What is Gemini -->
+  <div class="slide content-slide">
+    <h2>什麼是 Gemini？</h2>
+    <div class="two-col">
+      <div>
+        <ul class="icon-list">
+          <li><span class="icon">🌐</span><div><strong>Google 的 AI 助手</strong><br>整合 Google 搜尋能力</div></li>
+          <li><span class="icon">💬</span><div><strong>對話式介面</strong><br>用自然語言溝通</div></li>
+          <li><span class="icon">📄</span><div><strong>文件分析</strong><br>可上傳 PDF、圖片分析</div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="tool-card">
+          <h4>如何開始？</h4>
+          <p>gemini.google.com</p>
+          <p>用 Google 帳號登入即可使用</p>
+          <span class="tag green">免費</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Gemini Demo -->
+  <div class="slide content-slide">
+    <h2>實作：計劃構思</h2>
+    <h3>情境：規劃文化藝術節活動</h3>
+    <div class="code-block">我要規劃一場為期三天的在地文化藝術節，預算500萬，
+預計吸引5000人參加。請幫我：
+1. 列出活動架構和時間表
+2. 建議的表演類型和攤位規劃
+3. 需要注意的法規和申請事項
+4. 預算分配建議</div>
+    <p>💡 <span class="highlight">具體描述需求</span>，AI 才能給出精準回答</p>
+  </div>
+
+  <!-- Slide 6: Gemini Data -->
+  <div class="slide content-slide">
+    <h2>實作：資料收集與整理</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>📚 法規整理</h4>
+        <p>「請整理文化資產保存法的重點條文」</p>
+      </div>
+      <div class="tool-card">
+        <h4>📊 比較分析</h4>
+        <p>「比較 A、B、C 三個方案的優缺點」</p>
+      </div>
+      <div class="tool-card">
+        <h4>📝 報告摘要</h4>
+        <p>「將這份報告摘要成500字」</p>
+      </div>
+      <div class="tool-card">
+        <h4>📋 表格整理</h4>
+        <p>「將以上內容整理成表格」</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Gemini Tips -->
+  <div class="slide content-slide">
+    <h2>Gemini 進階技巧</h2>
+    <ul class="icon-list">
+      <li><span class="icon">📎</span><div><strong>上傳文件分析</strong><br>直接拖拉 PDF 或圖片，請 AI 分析內容</div></li>
+      <li><span class="icon">🔄</span><div><strong>追問和修正</strong><br>「請更詳細說明第三點」「請改成表格形式」</div></li>
+      <li><span class="icon">🎭</span><div><strong>設定角色</strong><br>「請扮演資深公務員，審查這份計畫書」</div></li>
+      <li><span class="icon">✏️</span><div><strong>迭代優化</strong><br>不滿意就繼續對話修改，直到滿意為止</div></li>
+    </ul>
+  </div>
+
+  <!-- Slide 8: Section 2 -->
+  <div class="slide section-slide">
+    <div class="section-num">02</div>
+    <h2>AI 生成圖片與表格</h2>
+    <p class="section-time">視覺化工具介紹 ｜ 30 分鐘</p>
+  </div>
+
+  <!-- Slide 9: Image Tools -->
+  <div class="slide content-slide">
+    <h2>圖片生成工具</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>🎨 Canva AI</h4>
+        <p>中文介面、模板豐富、免費版夠用</p>
+        <p>canva.com</p>
+        <span class="tag green">推薦</span>
+      </div>
+      <div class="tool-card">
+        <h4>🖼️ Microsoft Designer</h4>
+        <p>整合 Office 365、公務帳號可用</p>
+        <p>designer.microsoft.com</p>
+        <span class="tag">公務適用</span>
+      </div>
+      <div class="tool-card">
+        <h4>🔥 Adobe Firefly</h4>
+        <p>商用安全、版權無慮</p>
+        <p>firefly.adobe.com</p>
+        <span class="tag orange">正式發布</span>
+      </div>
+      <div class="tool-card">
+        <h4>🆓 Bing Image Creator</h4>
+        <p>免費、微軟帳號即可</p>
+        <p>bing.com/create</p>
+        <span class="tag green">免費</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 10: PPT Tools -->
+  <div class="slide content-slide">
+    <h2>簡報與圖表生成</h2>
+    <div class="two-col">
+      <div>
+        <h3>🚀 Gamma</h3>
+        <p>輸入主題，自動生成整份簡報</p>
+        <p class="highlight-green">gamma.app</p>
+        <div class="code-block">「請製作一份關於文化資產保存政策的簡報，包含現況、挑戰、解決方案」</div>
+      </div>
+      <div>
+        <h3>📊 Excel + Copilot</h3>
+        <p>用自然語言製作圖表</p>
+        <ul>
+          <li>「幫我把這些數據做成圓餅圖」</li>
+          <li>「加上趨勢線」</li>
+          <li>「改成深色主題」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 11: Section 3 -->
+  <div class="slide section-slide orange">
+    <div class="section-num">03</div>
+    <h2>AI 生成影片與字幕</h2>
+    <p class="section-time">多媒體製作工具 ｜ 30 分鐘</p>
+  </div>
+
+  <!-- Slide 12: Video Tools -->
+  <div class="slide content-slide">
+    <h2>AI 影片生成工具</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>🎬 Canva 影片</h4>
+        <p>模板豐富、操作簡單</p>
+        <p>適合製作宣傳短片</p>
+        <span class="tag green">入門推薦</span>
+      </div>
+      <div class="tool-card">
+        <h4>👤 Synthesia</h4>
+        <p>AI 虛擬主播講解影片</p>
+        <p>適合政策說明、教育訓練</p>
+        <span class="tag">專業級</span>
+      </div>
+      <div class="tool-card">
+        <h4>🎭 HeyGen</h4>
+        <p>AI 數位人影片、支援中文</p>
+        <p>可用自己照片生成分身</p>
+        <span class="tag orange">進階</span>
+      </div>
+      <div class="tool-card">
+        <h4>✈️ Runway</h4>
+        <p>文字/圖片生成影片</p>
+        <p>適合創意宣傳片</p>
+        <span class="tag">專業級</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 13: Subtitle Tools -->
+  <div class="slide content-slide">
+    <h2>字幕工具</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>✂️ 剪映 CapCut</h4>
+        <p>免費、中文語音辨識超準、一鍵生成字幕</p>
+        <span class="tag green">強力推薦</span>
+      </div>
+      <div class="tool-card">
+        <h4>🌐 VEED.io</h4>
+        <p>線上上傳影片加字幕、支援翻譯</p>
+        <span class="tag">線上工具</span>
+      </div>
+      <div class="tool-card">
+        <h4>🎙️ 雅婷逐字稿</h4>
+        <p>工研院開發、台灣口音優化</p>
+        <span class="tag green">本土方案</span>
+      </div>
+      <div class="tool-card">
+        <h4>📺 YouTube 自動字幕</h4>
+        <p>上傳後自動產生、可下載編輯</p>
+        <span class="tag green">免費</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 14: Section 4 -->
+  <div class="slide section-slide blue">
+    <div class="section-num">04</div>
+    <h2>AI 整理會議記錄</h2>
+    <p class="section-time">會議效率提升 ｜ 20 分鐘</p>
+  </div>
+
+  <!-- Slide 15: Meeting Tools -->
+  <div class="slide content-slide">
+    <h2>會議記錄工具</h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <h4>🔥 Fireflies.ai</h4>
+        <p>自動加入會議錄音、生成摘要和待辦事項</p>
+        <span class="tag green">推薦</span>
+      </div>
+      <div class="tool-card">
+        <h4>📝 tl;dv</h4>
+        <p>錄製+轉錄+摘要、可標記重點</p>
+        <span class="tag green">免費版夠用</span>
+      </div>
+      <div class="tool-card">
+        <h4>🏢 MS Copilot in Teams</h4>
+        <p>公務機關可能已有授權、即時會議摘要</p>
+        <span class="tag">公務適用</span>
+      </div>
+      <div class="tool-card">
+        <h4>🦦 Otter.ai</h4>
+        <p>即時轉錄+摘要、整合 Zoom</p>
+        <span class="tag orange">英文最強</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 16: Meeting Workflow -->
+  <div class="slide content-slide">
+    <h2>本地方案（資安考量）</h2>
+    <h3>不上傳敏感內容到國外伺服器</h3>
+    <div class="code-block">步驟1：會議錄音（手機或電腦）
+
+步驟2：上傳到剪映或雅婷轉成文字稿
+
+步驟3：貼到 Gemini 請它整理：
+
+「請將以下會議內容整理成：
+1. 會議摘要（200字內）
+2. 重點決議事項
+3. 各單位待辦事項與負責人
+4. 下次會議建議討論事項」</div>
+  </div>
+
+  <!-- Slide 17: Summary -->
+  <div class="slide content-slide">
+    <h2>📌 工具速查表</h2>
+    <table class="styled-table">
+      <tr><th>需求</th><th>推薦工具</th></tr>
+      <tr><td>計劃構思、資料整理</td><td><span class="highlight">Gemini</span>、ChatGPT</td></tr>
+      <tr><td>圖片生成</td><td><span class="highlight">Canva</span>、Microsoft Designer</td></tr>
+      <tr><td>簡報製作</td><td><span class="highlight">Gamma</span>、Canva</td></tr>
+      <tr><td>影片製作</td><td>Canva、<span class="highlight">剪映</span></td></tr>
+      <tr><td>字幕生成</td><td><span class="highlight">剪映</span>、VEED</td></tr>
+      <tr><td>會議記錄</td><td>剪映+Gemini、<span class="highlight">Fireflies</span></td></tr>
+    </table>
+  </div>
+
+  <!-- Slide 18: Warning -->
+  <div class="slide content-slide">
+    <h2>⚠️ 公務使用注意事項</h2>
+    <div class="warning-box">
+      <h4>🔒 資訊安全</h4>
+      <p>不要上傳機密文件或個人資料到 AI 工具</p>
+    </div>
+    <div class="warning-box">
+      <h4>✅ 人工審核</h4>
+      <p>AI 生成內容可能有錯誤，務必人工確認</p>
+    </div>
+    <div class="warning-box">
+      <h4>©️ 著作權</h4>
+      <p>AI 生成圖片/文字的著作權問題仍有爭議，正式發布前請確認</p>
+    </div>
+  </div>
+
+  <!-- Slide 19: End -->
+  <div class="slide title-slide">
+    <h1>🙋 Q&A 時間</h1>
+    <p class="subtitle">有任何問題歡迎提問！</p>
+    <p class="meta" style="margin-top: 60px;">感謝參與 ｜ 祝工作順利</p>
+  </div>
+
+  <div class="nav">
+    <button onclick="prevSlide()">◀</button>
+    <button onclick="nextSlide()">▶</button>
+  </div>
+  <div class="page-num"><span id="current">1</span> / <span id="total">19</span></div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+
+    function showSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      document.getElementById('current').textContent = currentSlide + 1;
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    document.getElementById('total').textContent = slides.length;
+  </script>
+</body>
+</html>
