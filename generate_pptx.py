@@ -6,7 +6,7 @@ AI 助力公務效率提升 - PPTX 簡報生成器
 
 from pptx import Presentation
 from pptx.util import Inches, Pt
-from pptx.dml.color import RgbColor
+from pptx.dml.color import RGBColor
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 import os
@@ -17,12 +17,12 @@ prs.slide_width = Inches(13.333)
 prs.slide_height = Inches(7.5)
 
 # 顏色定義
-DARK_BG = RgbColor(15, 15, 26)
-PURPLE = RgbColor(99, 102, 241)
-LIGHT_PURPLE = RgbColor(165, 180, 252)
-WHITE = RgbColor(255, 255, 255)
-GRAY = RgbColor(148, 163, 184)
-GREEN = RgbColor(52, 211, 153)
+DARK_BG = RGBColor(15, 15, 26)
+PURPLE = RGBColor(99, 102, 241)
+LIGHT_PURPLE = RGBColor(165, 180, 252)
+WHITE = RGBColor(255, 255, 255)
+GRAY = RGBColor(148, 163, 184)
+GREEN = RGBColor(52, 211, 153)
 
 def add_title_slide(title, subtitle, meta=""):
     slide_layout = prs.slide_layouts[6]  # blank
@@ -78,7 +78,7 @@ def add_section_slide(num, title, time_info):
     p.text = f"0{num}"
     p.font.size = Pt(120)
     p.font.bold = True
-    p.font.color.rgb = RgbColor(60, 60, 100)
+    p.font.color.rgb = RGBColor(60, 60, 100)
     p.alignment = PP_ALIGN.CENTER
     
     # 標題
@@ -216,7 +216,7 @@ def add_tool_slide(title, tools):
         # 卡片背景
         card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(x), Inches(y), Inches(5.8), Inches(2.5))
         card.fill.solid()
-        card.fill.fore_color.rgb = RgbColor(30, 30, 50)
+        card.fill.fore_color.rgb = RGBColor(30, 30, 50)
         card.line.color.rgb = PURPLE
         
         # 工具名稱
@@ -298,7 +298,7 @@ def add_table_slide(title, headers, rows):
             cell = table.cell(row_idx + 1, col_idx)
             cell.text = cell_text
             cell.fill.solid()
-            cell.fill.fore_color.rgb = RgbColor(25, 25, 40)
+            cell.fill.fore_color.rgb = RGBColor(25, 25, 40)
             p = cell.text_frame.paragraphs[0]
             p.font.size = Pt(16)
             p.font.color.rgb = GRAY
@@ -331,8 +331,8 @@ def add_warning_slide():
     for title, desc in warnings:
         box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.5), Inches(y), Inches(12.333), Inches(1.5))
         box.fill.solid()
-        box.fill.fore_color.rgb = RgbColor(50, 20, 20)
-        box.line.color.rgb = RgbColor(239, 68, 68)
+        box.fill.fore_color.rgb = RGBColor(50, 20, 20)
+        box.line.color.rgb = RGBColor(239, 68, 68)
         
         title_box = slide.shapes.add_textbox(Inches(0.8), Inches(y + 0.2), Inches(11.7), Inches(0.5))
         tf = title_box.text_frame
@@ -340,7 +340,7 @@ def add_warning_slide():
         p.text = title
         p.font.size = Pt(22)
         p.font.bold = True
-        p.font.color.rgb = RgbColor(252, 165, 165)
+        p.font.color.rgb = RGBColor(252, 165, 165)
         
         desc_box = slide.shapes.add_textbox(Inches(0.8), Inches(y + 0.7), Inches(11.7), Inches(0.6))
         tf = desc_box.text_frame
