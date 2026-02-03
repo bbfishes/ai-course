@@ -611,6 +611,43 @@
     .feature-card .icon { font-size: 3rem; margin-bottom: 15px; }
     .feature-card h4 { font-size: 1.2rem; margin-bottom: 8px; }
     .feature-card p { font-size: 1rem; color: #64748b; margin: 0; }
+  /* UI Mockups */
+    .mockup-container {
+      margin-top: 15px;
+      background: #1e1e2e;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #3f3f46;
+      height: 120px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Gemini Chat Mockup */
+    .mockup-chat { width: 100%; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .chat-bubble { padding: 6px 10px; border-radius: 10px; font-size: 0.7rem; max-width: 80%; }
+    .chat-bubble.user { align-self: flex-end; background: #4f46e5; color: white; border-bottom-right-radius: 2px; }
+    .chat-bubble.ai { align-self: flex-start; background: #374151; color: #e5e7eb; border-bottom-left-radius: 2px; }
+    .chat-input-mock { margin-top: auto; height: 20px; background: #374151; border-radius: 10px; width: 100%; }
+
+    /* Canva UI Mockup */
+    .mockup-canva { display: grid; grid-template-columns: 60px 1fr; height: 100%; width: 100%; }
+    .canva-sidebar { background: #111827; border-right: 1px solid #374151; display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 8px; }
+    .sidebar-icon { width: 20px; height: 20px; background: #374151; border-radius: 4px; }
+    .canva-main { padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .canva-item { background: #374151; border-radius: 4px; position: relative; }
+    .canva-item::after { content: ''; position: absolute; bottom: 4px; left: 4px; width: 60%; height: 4px; background: #4b5563; border-radius: 2px; }
+
+    /* CapCut Timeline Mockup */
+    .mockup-timeline { width: 100%; padding: 10px; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+    .timeline-track { height: 24px; background: #1f2937; border-radius: 4px; position: relative; overflow: hidden; display: flex; align-items: center; padding: 0 4px; }
+    .timeline-clip { height: 18px; background: #4f46e5; border-radius: 2px; width: 40%; margin-right: 2px; }
+    .timeline-clip.sub { background: #ea580c; width: 30%; margin-left: 10px; }
+    .playhead { position: absolute; left: 35%; top: 0; bottom: 0; width: 2px; background: #fff; z-index: 10; }
+    .playhead::before { content: ''; position: absolute; top: -4px; left: -4px; width: 10px; height: 10px; background: #fff; transform: rotate(45deg); }
+
   </style>
 </head>
 <body>
@@ -701,33 +738,47 @@
   <div class="slide content-slide">
     <div class="glow-border"></div>
     <h2>實作步驟：開始使用 Gemini</h2>
-    <div class="step-container">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>開啟 Gemini 網站</h4>
-          <p>在瀏覽器輸入 <span class="highlight">gemini.google.com</span></p>
+    <div class="step-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">1</div>
+          <div class="step-content"><h4>開啟網站</h4><p>gemini.google.com</p></div>
+        </div>
+        <div class="mockup-container">
+          <div style="color: #a5b4fc; font-size: 0.9rem;">🌍 Browser Address Bar</div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>登入 Google 帳號</h4>
-          <p>使用公務信箱或個人 Gmail 帳號登入</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">2</div>
+          <div class="step-content"><h4>登入帳號</h4><p>使用 Google 帳號</p></div>
+        </div>
+        <div class="mockup-container">
+          <div style="background: #4285F4; color: white; padding: 8px 16px; border-radius: 4px; font-size: 0.8rem;">G 登入 Google</div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>開始對話</h4>
-          <p>在輸入框輸入你的問題或需求，按 Enter 送出</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">3</div>
+          <div class="step-content"><h4>輸入問題</h4><p>在對話框輸入需求</p></div>
+        </div>
+        <div class="mockup-container">
+          <div class="mockup-chat">
+             <div class="chat-input-mock"></div>
+             <div style="font-size: 0.6rem; color: #9ca3af; text-align: center; margin-top: 4px;">在此輸入提示詞...</div>
+          </div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>持續追問</h4>
-          <p>根據回答繼續提問，讓 AI 幫你完善內容</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">4</div>
+          <div class="step-content"><h4>獲得回答</h4><p>AI 生成內容並互動</p></div>
+        </div>
+        <div class="mockup-container">
+          <div class="mockup-chat">
+            <div class="chat-bubble user">幫我寫活動企劃</div>
+            <div class="chat-bubble ai">好的，這是您的企劃草案...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -861,33 +912,47 @@ C. 華山文創園區
   <div class="slide content-slide">
     <div class="glow-border"></div>
     <h2>實作：用 Canva 製作活動海報</h2>
-    <div class="step-container">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>開啟 Canva → 選擇「海報」</h4>
-          <p>選擇適合的尺寸，如 A3 或社群貼文尺寸</p>
+    <div class="step-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">1</div>
+          <div class="step-content"><h4>選擇格式</h4><p>選擇「海報」尺寸</p></div>
+        </div>
+        <div class="mockup-container">
+           <div style="display: flex; gap: 5px;">
+             <div style="width: 20px; height: 30px; border: 1px solid #fff;"></div>
+             <div style="width: 20px; height: 30px; border: 1px solid #666;"></div>
+           </div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>使用「AI 魔法設計」</h4>
-          <p>點擊左側「設計」→ 輸入活動主題關鍵字</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">2</div>
+          <div class="step-content"><h4>AI 魔法設計</h4><p>輸入關鍵字自動排版</p></div>
+        </div>
+        <div class="mockup-container">
+          <div class="mockup-canva">
+            <div class="canva-sidebar"><div class="sidebar-icon" style="background: #4f46e5;"></div><div class="sidebar-icon"></div></div>
+            <div class="canva-main"><div class="canva-item"></div><div class="canva-item"></div></div>
+          </div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>AI 生成圖片</h4>
-          <p>點擊「應用程式」→「AI 圖片產生器」→ 輸入描述</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">3</div>
+          <div class="step-content"><h4>生成圖片</h4><p>輸入「台灣傳統夜市」</p></div>
+        </div>
+        <div class="mockup-container">
+           <div style="border: 1px dashed #a5b4fc; padding: 5px; color: #a5b4fc; font-size: 0.7rem;">🖼️ Generating...</div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>下載成品</h4>
-          <p>右上角「分享」→「下載」→ 選擇 PNG 或 PDF</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">4</div>
+          <div class="step-content"><h4>下載成品</h4><p>右上角分享→下載</p></div>
+        </div>
+        <div class="mockup-container">
+           <div style="background: white; color: black; padding: 5px 10px; border-radius: 4px; font-weight: bold;">⬇ Download</div>
         </div>
       </div>
     </div>
@@ -1015,33 +1080,46 @@ C. 華山文創園區
   <div class="slide content-slide">
     <div class="glow-border"></div>
     <h2>實作：用剪映自動上字幕</h2>
-    <div class="step-container">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h4>下載剪映（電腦版或手機版）</h4>
-          <p>官網下載，免費使用所有功能</p>
+    <div class="step-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">1</div>
+          <div class="step-content"><h4>匯入影片</h4><p>拖入時間軸</p></div>
+        </div>
+        <div class="mockup-container">
+           <div class="mockup-timeline">
+             <div class="timeline-track"><div class="timeline-clip"></div></div>
+           </div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h4>匯入影片檔案</h4>
-          <p>將錄好的影片拖入剪映時間軸</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">2</div>
+          <div class="step-content"><h4>識別字幕</h4><p>點擊「智能字幕」</p></div>
+        </div>
+        <div class="mockup-container">
+           <div style="border: 1px solid #48bb78; color: #48bb78; padding: 4px 8px; border-radius: 4px;">🅰 識別字幕</div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h4>點擊「文字」→「智能字幕」→「識別字幕」</h4>
-          <p>AI 自動辨識語音並生成字幕</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">3</div>
+          <div class="step-content"><h4>AI 生成中</h4><p>自動語音轉文字</p></div>
+        </div>
+        <div class="mockup-container">
+           <div class="mockup-timeline">
+             <div class="timeline-track"><div class="timeline-clip"></div><div class="playhead"></div></div>
+             <div class="timeline-track" style="margin-top: 4px; height: 16px;"><div class="timeline-clip sub"></div></div>
+           </div>
         </div>
       </div>
-      <div class="step-card">
-        <div class="step-num">4</div>
-        <div class="step-content">
-          <h4>校對並匯出</h4>
-          <p>修正錯字，選擇匯出格式（影片或 SRT 字幕檔）</p>
+      <div class="step-card" style="flex-direction: column; gap: 10px;">
+        <div style="display: flex; gap: 15px; align-items: center;">
+          <div class="step-num">4</div>
+          <div class="step-content"><h4>匯出檔案</h4><p>導出 MP4 或 SRT</p></div>
+        </div>
+        <div class="mockup-container">
+           <div style="background: #4f46e5; color: white; padding: 6px 12px; border-radius: 4px;">↗ 導出</div>
         </div>
       </div>
     </div>
